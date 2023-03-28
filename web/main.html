@@ -72,6 +72,7 @@
             font-weight: bold;
             display: flex;
             align-items: center;
+            margin-left: 10px;
 
 
 
@@ -95,7 +96,7 @@
         }
 
         .res {
-            width:370px;
+            width: 370px;
             height: min-content;
             border-radius: 15px;
             background-color: #fff;
@@ -119,12 +120,12 @@
 
         }
 
-        .resW{
+        .resW {
             width: 100%;
             height: 100%;
             display: flex;
             flex-direction: column;
-            overflow:scroll;
+            overflow: scroll;
             scroll-behavior: auto;
             align-items: center;
             justify-content: center;
@@ -132,8 +133,13 @@
 
 
         @keyframes fade {
-            from {opacity: 0;}
-            to {opacity: 1;}
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         @keyframes listening {
@@ -176,26 +182,42 @@
         }
 
         .answear-ani {
-            overflow: hidden; /* Ensures the content is not revealed until the animation */
-            border-right: .15em solid orange; /* The typwriter cursor */
-            white-space: pre-wrap; /* Keeps the content on a single line */
-            margin: 0 auto; /* Gives that scrolling effect as the typing happens */
-            animation: 
+            overflow: hidden;
+            /* Ensures the content is not revealed until the animation */
+            border-right: .15em solid orange;
+            /* The typwriter cursor */
+            white-space: pre-wrap;
+            /* Keeps the content on a single line */
+            margin: 0 auto;
+            /* Gives that scrolling effect as the typing happens */
+            animation:
                 typing 3.5s steps(40, end),
                 blink-caret .75s step-end infinite;
-}
+        }
 
-/* The typing effect */
-@keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
-}
+        /* The typing effect */
+        @keyframes typing {
+            from {
+                width: 0
+            }
 
-/* The typewriter cursor effect */
-@keyframes blink-caret {
-  from, to { border-color: transparent }
-  50% { border-color: orange; }
-}
+            to {
+                width: 100%
+            }
+        }
+
+        /* The typewriter cursor effect */
+        @keyframes blink-caret {
+
+            from,
+            to {
+                border-color: transparent
+            }
+
+            50% {
+                border-color: orange;
+            }
+        }
     </style>
 </head>
 
@@ -207,16 +229,16 @@
                 <p id="status" onclick="load()">mic is off</p>
             </div>
             <div class="resW" id="resW">
-            <div class="res">
-                <p class="target" id="target0">
-                <b>Question:</b>
-                <span style="opacity: 0.5;">click the mic and ask me anything 
-                <i class='bx bx-right-arrow-alt' style="font-size: larger; float: right;"></i></span>
-                </p>
-            </div>
+                <div class="res">
+                    <p class="target" id="target0">
+                        <b>Question:</b>
+                        <span style="opacity: 0.5;">click the mic and ask me anything
+                            <i class='bx bx-right-arrow-alt' style="font-size: larger; float: right;"></i></span>
+                    </p>
+                </div>
             </div>
         </div>
-<div class="micBox" id="micB">
+        <div class="micBox" id="micB">
 
             <div class="Outcircle" id="mic">
                 <div class="circle">
@@ -234,21 +256,21 @@
         const light = document.getElementById("light");
         const resW = document.getElementById("resW");
 
-let listening = false;
+        let listening = false;
 
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        
+
         let toggleBtn = null;
-        
+
         if (typeof SpeechRecognition === "undefined") {
             console.alert("Your browser doesn't support Speech API. Please download latest Chrome version.");
         }
-        
+
         const recognition = new SpeechRecognition();
         recognition.continuous = true;
         recognition.interimResults = true;
-        
+
         recognition.onresult = event => {
             const current = event.resultIndex;
             const recognitionResult = event.results[current];
@@ -257,30 +279,33 @@ let listening = false;
             if (recognitionResult.isFinal) {
                 status.innerHTML = "thinking ...";
                 const response = process(recognitionText);
-                
+
                 mic.style.animation = '';
                 light.style.backgroundColor = '#eddf11';
-                
+
                 recognition.stop();
                 target.innerHTML = `<b>Question:</b><span style='opacity: 1;'> ${recognitionText}</span>`;
 
 
-            
+
             }
 
 
-            else{
+            else {
                 console.log(recognitionText);
                 target.innerHTML = `<b>Question:</b><span style='opacity: 0.5;'> ${recognitionText}</span>`;
+                if (document.getElementById("answerR") != null) {
+                    document.getElementById("answerR").innerHTML = '';
+            }
             }
         }
 
-        
+
         toggleBtn = () => {
             if (listening) {
                 recognition.stop();
                 doneListening();
-                
+
             } else {
                 recognition.start();
                 listen()
@@ -290,11 +315,15 @@ let listening = false;
 
         micBox.addEventListener("click", toggleBtn);
 
+        function removeElement(id) {
+            var elem = document.getElementById(id);
+            return elem.parentNode.removeChild(elem);
+}
+
         function listen() {
             light.style.backgroundColor = '#29e414';
             status.innerHTML = 'listening ... ';
             mic.style.animation = 'listening 2s infinite ease-in-out';
-
         }
 
         function doneListening() {
@@ -306,32 +335,50 @@ let listening = false;
 
         function result(respon) {
             let answw = respon.data.outputs[0].text;
-            let answww = answw.slice(2,-1);
+            let answww = answw.slice(2, -1);
 
+            doneListening();
             status.innerHTML = 'mic is off';
             mic.style.animation = '';
-            light.style.backgroundColor = '#c72424';
 
             var texqd = `<span style='display:flex; flex-direction:column;'><b>Goofy AI's answer:</b>${answww}</span>`;
             
-            let answer = document.createElement('p');
-            answer.className = 'answear-ani';
-            answer.innerHTML = texqd;
+            if (document.getElementById("answerR") == null) {
+                let answer = document.createElement('p');
+                answer.className = 'answear-ani';
+                answer.innerHTML = texqd;
+                answer.id = "answerR";
 
-            
-            let answerBox = document.createElement('div');
-            answerBox.className = "res";
-            answerBox.appendChild(answer);
 
-            resW.appendChild(answerBox);
-        }
+                let answerBox = document.createElement('div');
+                answerBox.className = "res";
+                answerBox.appendChild(answer);
 
+                resW.appendChild(answerBox);
+            } else {
+                document.getElementById("answerR").innerHTML = texqd;
+            }
+            }
         function process(rawText) {
-            
+
             let text = rawText.replace(/\s/g, " ").replace(/\'/g, " ");
             text = text.toLowerCase();
             let str = `you are now an goofy ai, respond to this question the most goofy way possible: - ${text}?`;
             console.log(str);
+            let yy = {
+  "status": "success",
+  "data": {
+    "outputs": [
+      {
+        "index": 0,
+        "text": `\n\n${str}`,
+        "id": "ed42a4bf-9b64-49b5-aa64-3421461b8f21"
+      }
+    ],
+    "remaining_credits": 13
+  }
+};
+            result(yy);
             /*
             const options = {
                 method: 'POST',
@@ -345,7 +392,7 @@ let listening = false;
                 .then(response => result(response))
                 .catch(err => console.error(err));
         */
-       }
+        }
     </script>
 </body>
 
