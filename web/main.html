@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="/eel.js"></script>
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+
+    <title>ASSistant</title>
+    <style>
+        body {
+            background-color: #426d82;
+        }
+
+        .struct {
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+            width: 100vw;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .micBox {
+            display: flex;
+            width: 50%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            z-index: 3;
+            animation-duration: 2000ms;
+            animation-iteration-count: infinite;
+            animation-timing-function: ease-in-out;
+
+
+        }
+
+        .circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #1e5875;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            box-shadow: 1px 1px 22px 30px rgba(156, 149, 149, 0.75);
+            -webkit-box-shadow: 1px 1px 22px 30px rgba(156, 149, 149, 0.75);
+            -moz-box-shadow: 1px 1px 22px 30px rgba(156, 149, 149, 0.75);
+        }
+
+        .Outcircle {
+            width: 250px;
+            height: 250px;
+            border-radius: 20%;
+            transform: rotate(45deg);
+            background-color: #bbbfc1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            animation: none;
+        }
+
+        .status {
+            color: aliceblue;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+
+
+
+        }
+
+        .statusLight {
+            width: 25px;
+            height: 25px;
+            background-color: #c72424;
+            border-radius: 50%;
+            border: #e0e0e0fb 5px solid;
+            margin-right: 15px;
+        }
+
+        .textA {
+            height: 100%;
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: initial;
+        }
+
+        .res {
+            width:370px;
+            height: min-content;
+            border-radius: 15px;
+            background-color: #fff;
+            color: #000;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            animation: fade 300ms ease-in-out;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 10px;
+
+
+
+        }
+
+        .target {
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        .resW{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow:scroll;
+            scroll-behavior: auto;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        @keyframes fade {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+
+        @keyframes listening {
+            0% {
+                width: 250px;
+                height: 250px;
+            }
+
+            50% {
+                width: 350px;
+                height: 350px;
+            }
+
+            100% {
+                width: 250px;
+                height: 250px;
+
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                width: 250px;
+                height: 250px;
+                transform: rotate(45deg);
+            }
+
+            50% {
+                width: 350px;
+                height: 350px;
+                transform: rotate(225deg);
+            }
+
+            100% {
+                width: 250px;
+                height: 250px;
+                transform: rotate(405deg);
+
+            }
+        }
+
+        .answear-ani {
+            overflow: hidden; /* Ensures the content is not revealed until the animation */
+            border-right: .15em solid orange; /* The typwriter cursor */
+            white-space: pre-wrap; /* Keeps the content on a single line */
+            margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+            animation: 
+                typing 3.5s steps(40, end),
+                blink-caret .75s step-end infinite;
+}
+
+/* The typing effect */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: orange; }
+}
+    </style>
+</head>
+
+<body>
+    <div class="struct">
+        <div class="textA">
+            <div class="status">
+                <div class="statusLight" id="light"></div>
+                <p id="status" onclick="load()">mic is off</p>
+            </div>
+            <div class="resW" id="resW">
+            <div class="res">
+                <p class="target" id="target0">
+                <b>Question:</b>
+                <span style="opacity: 0.5;">click the mic and ask me anything 
+                <i class='bx bx-right-arrow-alt' style="font-size: larger; float: right;"></i></span>
+                </p>
+            </div>
+            </div>
+        </div>
+<div class="micBox" id="micB">
+
+            <div class="Outcircle" id="mic">
+                <div class="circle">
+                    <i class='bx bx-microphone' style='color:#e8e8e8; font-size:50px; transform: rotate(-45deg);'></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const micBox = document.getElementById("micB");
+        const mic = document.getElementById("mic");
+        let status = document.getElementById("status");
+        const target = document.getElementById("target0");
+        const light = document.getElementById("light");
+        const resW = document.getElementById("resW");
+
+let listening = false;
+
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        
+        let toggleBtn = null;
+        
+        if (typeof SpeechRecognition === "undefined") {
+            console.alert("Your browser doesn't support Speech API. Please download latest Chrome version.");
+        }
+        
+        const recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        
+        recognition.onresult = event => {
+            const current = event.resultIndex;
+            const recognitionResult = event.results[current];
+            const recognitionText = recognitionResult[0].transcript;
+
+            if (recognitionResult.isFinal) {
+                status.innerHTML = "thinking ...";
+                const response = process(recognitionText);
+                
+                mic.style.animation = '';
+                light.style.backgroundColor = '#eddf11';
+                
+                target.innerHTML = `<b>Question:</b><span style='opacity: 1;'> ${response}</span>`;
+                listening = false;
+            }
+            else{
+                target.innerHTML = `<b>Question:</b><span style='opacity: 0.5;'> ${response}</span>`;
+            }
+        }
+
+        
+        toggleBtn = () => {
+            if (listening) {
+                recognition.stop();
+                listen()
+
+            } else {
+                recognition.start();
+                startBtn.textContent = "Stop listening";
+                doneListening();
+            }
+            listening = !listening;
+        };
+
+        micBox.addEventListener("click", toggleBtn);
+
+        function listen() {
+            light.style.backgroundColor = '#29e414';
+            status.innerHTML = 'listening ... ';
+            mic.style.animation = 'listening 2s infinite ease-in-out';
+
+        }
+
+        function doneListening() {
+            light.style.backgroundColor = '#c72424';
+            status.innerHTML = 'mic is off';
+            mic.style.animation = '';
+
+        }
+
+        function result(respon) {
+            let answw = respon.data.outputs[0].text;
+            let answww = answw.slice(2,-1);
+
+            status.innerHTML = 'mic is off';
+            mic.style.animation = '';
+            light.style.backgroundColor = '#c72424';
+
+            var texqd = `<span style='display:flex; flex-direction:column;'><b>Goofy AI's answer:</b>${answww}</span>`;
+            
+            let answer = document.createElement('p');
+            answer.className = 'answear-ani';
+            answer.innerHTML = texqd;
+
+            
+            let answerBox = document.createElement('div');
+            answerBox.className = "res";
+            answerBox.appendChild(answer);
+
+            resW.appendChild(answerBox);
+        }
+
+        function process(rawText) {
+            
+            let text = rawText.replace(/\s/g, "").replace(/\'/g, "");
+            text = text.toLowerCase();
+            let str = `you are now an goofy ai, respond to this question the most goofy way possible: - ${text}?`;
+            console.log(str);
+            /*
+            const options = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: 'Bearer gAAAAABkIzuPpzNWpDk0PlrIlJTzzyMW1FjFEcYRUnmSOSFeYpPgXHOkVDefF0DNTDNwXEt7AXpKmKI8wxGHVscNzMQkN_hVGsuzAk34GhRINKSuVyH2l0ipKWyw3xky7de_a_Q6Wq9v' },
+
+                body: `{"max_tokens":256,"n":1,"source_lang":"en","target_lang":"en","temperature":0.65,"text":"${str}"}`
+            };
+
+            fetch('https://api.textcortex.com/v1/texts/completions', options)
+                .then(response => response.json())
+                .then(response => result(response))
+                .catch(err => console.error(err));
+        */
+       }
+    </script>
+</body>
+
+</html>
