@@ -230,7 +230,7 @@
         const micBox = document.getElementById("micB");
         const mic = document.getElementById("mic");
         let status = document.getElementById("status");
-        const target = document.getElementById("target0");
+        let target = document.getElementById("target0");
         const light = document.getElementById("light");
         const resW = document.getElementById("resW");
 
@@ -261,11 +261,17 @@ let listening = false;
                 mic.style.animation = '';
                 light.style.backgroundColor = '#eddf11';
                 
-                target.innerHTML = `<b>Question:</b><span style='opacity: 1;'> ${response}</span>`;
-                listening = false;
+                recognition.stop();
+                target.innerHTML = `<b>Question:</b><span style='opacity: 1;'> ${recognitionText}</span>`;
+
+
+            
             }
+
+
             else{
-                target.innerHTML = `<b>Question:</b><span style='opacity: 0.5;'> ${response}</span>`;
+                console.log(recognitionText);
+                target.innerHTML = `<b>Question:</b><span style='opacity: 0.5;'> ${recognitionText}</span>`;
             }
         }
 
@@ -273,12 +279,11 @@ let listening = false;
         toggleBtn = () => {
             if (listening) {
                 recognition.stop();
-                listen()
-
+                doneListening();
+                
             } else {
                 recognition.start();
-                startBtn.textContent = "Stop listening";
-                doneListening();
+                listen()
             }
             listening = !listening;
         };
@@ -323,7 +328,7 @@ let listening = false;
 
         function process(rawText) {
             
-            let text = rawText.replace(/\s/g, "").replace(/\'/g, "");
+            let text = rawText.replace(/\s/g, " ").replace(/\'/g, " ");
             text = text.toLowerCase();
             let str = `you are now an goofy ai, respond to this question the most goofy way possible: - ${text}?`;
             console.log(str);
