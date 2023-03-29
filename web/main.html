@@ -255,8 +255,8 @@
         let target = document.getElementById("target0");
         const light = document.getElementById("light");
         const resW = document.getElementById("resW");
-
         let listening = false;
+        /* comment out if u are using raspberry pi*
 
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -299,19 +299,42 @@
             }
             }
         }
-
+        /**/
 
         toggleBtn = () => {
             if (listening) {
-                recognition.stop();
-                doneListening();
+                /*recognition.stop();*/
+
+               /*doneListening();*/
 
             } else {
-                recognition.start();
+                /*
+               recognition.start();
+                listen();*/
+
                 listen()
-            }
-            listening = !listening;
+                target.innerHTML = "<b>Question:</b><span style='opacity: 1;'> Wait ...</span>";
+                if(document.getElementById("answerR") != null) {
+                    document.getElementById("answerR").innerHTML = "<span style='display:flex; flex-direction:column;'><b>Goofy AI's answer:</b>...</span>";
+                }
+
+                eel.recog()((text)=>{
+                    status.innerHTML = "listening ...";
+
+                const response = process(text);
+
+                mic.style.animation = 'listening 2s infinite ease-in-out';
+
+                light.style.backgroundColor = '#29e414';
+
+
+                target.innerHTML = `<b>Question:</b><span style='opacity: 1;'> ${text}</span>`;
+                listening = false;
+                doneListening();
+});                
+            //listening = !listening;
         };
+    }
 
         micBox.addEventListener("click", toggleBtn);
 
@@ -366,21 +389,22 @@
             let str = `you are now an goofy ai, respond to this question the most goofy way possible: - ${text}?`;
             console.log(str);
             let yy = {
-  "status": "success",
-  "data": {
-    "outputs": [
-      {
-        "index": 0,
-        "text": `\n\n${str}`,
-        "id": "ed42a4bf-9b64-49b5-aa64-3421461b8f21"
-      }
-    ],
-    "remaining_credits": 13
-  }
-};
+                    "status": "success",
+                    "data": {
+                        "outputs": [
+                        {
+                            "index": 0,
+                            "text": `\n\n${str}`,
+                            "id": "ed42a4bf-9b64-49b5-aa64-3421461b8f21"
+                        }
+                        ],
+                        "remaining_credits": 13
+                    }
+                    };
             result(yy);
-            /*
-            const options = {
+        }
+/*         
+         const options = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', Authorization: 'Bearer gAAAAABkIzuPpzNWpDk0PlrIlJTzzyMW1FjFEcYRUnmSOSFeYpPgXHOkVDefF0DNTDNwXEt7AXpKmKI8wxGHVscNzMQkN_hVGsuzAk34GhRINKSuVyH2l0ipKWyw3xky7de_a_Q6Wq9v' },
 
@@ -391,8 +415,8 @@
                 .then(response => response.json())
                 .then(response => result(response))
                 .catch(err => console.error(err));
-        */
         }
+    */
     </script>
 </body>
 
