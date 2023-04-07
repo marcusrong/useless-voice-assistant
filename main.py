@@ -59,4 +59,4 @@ def recog():
     return text 
 
 eel.init('web')
-eel.start('main.html', cmdline_args=['--start-fullscreen'])
+eel.start('intro.html', cmdline_args=['--start-fullscreen'])

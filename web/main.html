@@ -256,7 +256,7 @@
         const light = document.getElementById("light");
         const resW = document.getElementById("resW");
         let listening = false;
-        /* comment out if u are using raspberry pi*
+        /* comment out if u are using raspberry pi*/
 
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -303,14 +303,13 @@
 
         toggleBtn = () => {
             if (listening) {
-                /*recognition.stop();*/
-
-               /*doneListening();*/
+                recognition.stop();
+                doneListening();
 
             } else {
-                /*
+                
                recognition.start();
-                listen();*/
+                listen();/*
 
                 listen()
                 target.innerHTML = "<b>Question:</b><span style='opacity: 1;'> Wait ...</span>";
@@ -331,8 +330,8 @@
                 target.innerHTML = `<b>Question:</b><span style='opacity: 1;'> ${text}</span>`;
                 listening = false;
                 doneListening();
-});                
-            //listening = !listening;
+});                */
+            listening = !listening;
         };
     }
 
@@ -388,6 +387,7 @@
             text = text.toLowerCase();
             let str = `you are now an goofy ai, respond to this question the most goofy way possible: - ${text}?`;
             console.log(str);
+            /*
             let yy = {
                     "status": "success",
                     "data": {
@@ -402,11 +402,11 @@
                     }
                     };
             result(yy);
-        }
-/*         
+        */
+    
          const options = {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', Authorization: 'Bearer gAAAAABkIzuPpzNWpDk0PlrIlJTzzyMW1FjFEcYRUnmSOSFeYpPgXHOkVDefF0DNTDNwXEt7AXpKmKI8wxGHVscNzMQkN_hVGsuzAk34GhRINKSuVyH2l0ipKWyw3xky7de_a_Q6Wq9v' },
+                headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ** your_textcotex_token_here **' },
 
                 body: `{"max_tokens":256,"n":1,"source_lang":"en","target_lang":"en","temperature":0.65,"text":"${str}"}`
             };
@@ -416,7 +416,6 @@
                 .then(response => result(response))
                 .catch(err => console.error(err));
         }
-    */
     </script>
 </body>
 
